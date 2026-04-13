@@ -1,0 +1,467 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=1200">
+<title>План на сегодня</title>
+<style>
+  body {
+    font-family: -apple-system, 'SF Pro', 'Helvetica Neue', sans-serif;
+    max-width: 1100px;
+    margin: 20px auto;
+    background: #f5f5f5;
+    padding: 20px;
+  }
+  .card {
+    background: white;
+    border-radius: 16px;
+    padding: 28px;
+    box-shadow: 0 2px 8px rgba(0,0,0,0.1);
+  }
+  .header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+  }
+  .header-left {
+    display: flex;
+    align-items: baseline;
+    gap: 12px;
+  }
+  .date {
+    font-size: 22px;
+    font-weight: 700;
+    color: #1a1a1a;
+  }
+  .weekday {
+    font-size: 13px;
+    color: #888;
+    text-transform: uppercase;
+    letter-spacing: 2px;
+  }
+  .goal {
+    background: #e8f5e9;
+    border-radius: 8px;
+    padding: 6px 14px;
+    font-size: 12px;
+    max-width: 400px;
+    text-align: right;
+  }
+  .goal strong { color: #2e7d32; }
+
+  .columns {
+    display: flex;
+    gap: 20px;
+  }
+  .col-left {
+    flex: 1;
+  }
+  .col-right {
+    width: 280px;
+    flex-shrink: 0;
+  }
+
+  .section {
+    margin-bottom: 12px;
+  }
+  .section-title {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #888;
+    margin-bottom: 4px;
+    padding-bottom: 3px;
+    border-bottom: 1px solid #eee;
+  }
+  .task-row {
+    display: flex;
+    align-items: stretch;
+    border-bottom: 1px solid #f0f0f0;
+    min-height: 32px;
+  }
+  .task-left {
+    display: flex;
+    align-items: center;
+    width: 380px;
+    flex-shrink: 0;
+    padding: 4px 0;
+  }
+  .task-notes {
+    flex: 1;
+    border-left: 1px dashed #ddd;
+    padding: 4px 0 4px 10px;
+    min-height: 30px;
+  }
+  .checkbox {
+    width: 18px;
+    height: 18px;
+    border: 2px solid #ccc;
+    border-radius: 4px;
+    margin-right: 8px;
+    flex-shrink: 0;
+  }
+  .task-time {
+    font-size: 12px;
+    font-weight: 600;
+    color: #555;
+    min-width: 42px;
+    margin-right: 6px;
+  }
+  .task-name {
+    font-size: 12px;
+    color: #1a1a1a;
+  }
+  .color-money .checkbox { border-color: #4caf50; }
+  .color-social .checkbox { border-color: #ffc107; }
+  .color-health .checkbox { border-color: #2196f3; }
+  .color-spirit .checkbox { border-color: #f44336; }
+  .color-other .checkbox { border-color: #9e9e9e; }
+
+  .col-header {
+    display: flex;
+    border-bottom: 1px solid #eee;
+    margin-bottom: 4px;
+    padding-bottom: 3px;
+  }
+  .col-header span {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1px;
+    color: #aaa;
+  }
+  .col-header .ch-task { width: 380px; }
+  .col-header .ch-notes { flex: 1; padding-left: 10px; }
+
+  .affirm {
+    background: #fff3e0;
+    border-radius: 10px;
+    padding: 12px;
+    margin-bottom: 12px;
+  }
+  .affirm-title {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #e65100;
+    margin-bottom: 6px;
+  }
+  .affirm-item {
+    font-size: 11px;
+    color: #333;
+    padding: 2px 0;
+    line-height: 1.4;
+  }
+
+  .reflect {
+    background: #e8eaf6;
+    border-radius: 10px;
+    padding: 12px;
+    margin-bottom: 12px;
+  }
+  .reflect-title {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #283593;
+    margin-bottom: 6px;
+  }
+  .reflect-item {
+    font-size: 11px;
+    color: #333;
+    padding: 2px 0;
+  }
+
+  .habits {
+    background: #fce4ec;
+    border-radius: 10px;
+    padding: 12px;
+    margin-bottom: 12px;
+  }
+  .habits-title {
+    font-size: 10px;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 1.5px;
+    color: #c62828;
+    margin-bottom: 6px;
+  }
+  .habits-row {
+    display: flex;
+    align-items: center;
+    padding: 2px 0;
+  }
+  .habits-check {
+    width: 14px;
+    height: 14px;
+    border: 2px solid #e57373;
+    border-radius: 3px;
+    margin-right: 6px;
+    flex-shrink: 0;
+  }
+  .habits-name {
+    font-size: 11px;
+    color: #333;
+  }
+
+  .legend {
+    display: flex;
+    gap: 14px;
+    justify-content: center;
+    margin-top: 12px;
+  }
+  .legend-item {
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: 10px;
+    color: #888;
+  }
+  .legend-dot {
+    width: 8px;
+    height: 8px;
+    border-radius: 2px;
+  }
+  .footer {
+    text-align: center;
+    margin-top: 10px;
+    font-size: 12px;
+    color: #aaa;
+  }
+</style>
+</head>
+<body>
+<div class="card">
+  <div class="header">
+    <div class="header-left">
+      <div class="date">13 апреля 2026</div>
+      <div class="weekday">Понедельник</div>
+    </div>
+    <div class="goal">
+      <strong>Цель недели:</strong> Подготовить и передать магазин ПивМаг на 2й Барнаульской
+    </div>
+  </div>
+
+  <div class="columns">
+    <div class="col-left">
+      <div class="col-header">
+        <span class="ch-task">Задача</span>
+        <span class="ch-notes">Заметки / статус</span>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Утренняя настройка</div>
+        <div class="task-row color-spirit">
+          <div class="task-left">
+            <div class="checkbox"></div>
+            <div class="task-time">06:30</div>
+            <div class="task-name">Подъём, стакан воды + псиллиум</div>
+          </div>
+          <div class="task-notes"></div>
+        </div>
+        <div class="task-row color-spirit">
+          <div class="task-left">
+            <div class="checkbox"></div>
+            <div class="task-time">06:35</div>
+            <div class="task-name">Чтение — "Ни Сы" Джен Синсеро</div>
+          </div>
+          <div class="task-notes"></div>
+        </div>
+        <div class="task-row color-spirit">
+          <div class="task-left">
+            <div class="checkbox"></div>
+            <div class="task-time">06:45</div>
+            <div class="task-name">Аффирмации — 7 фраз вслух, стоя</div>
+          </div>
+          <div class="task-notes"></div>
+        </div>
+        <div class="task-row color-spirit">
+          <div class="task-left">
+            <div class="checkbox"></div>
+            <div class="task-time">06:48</div>
+            <div class="task-name">Контрастный душ</div>
+          </div>
+          <div class="task-notes"></div>
+        </div>
+        <div class="task-row color-spirit">
+          <div class="task-left">
+            <div class="checkbox"></div>
+            <div class="task-time">07:00</div>
+            <div class="task-name">Приготовить и съесть завтрак</div>
+          </div>
+          <div class="task-notes"></div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Задачи А — до обеда</div>
+        <div class="task-row color-money">
+          <div class="task-left">
+            <div class="checkbox"></div>
+            <div class="task-time">08:00</div>
+            <div class="task-name">Почта — ответить на письма с выходных</div>
+          </div>
+          <div class="task-notes"></div>
+        </div>
+        <div class="task-row color-money">
+          <div class="task-left">
+            <div class="checkbox"></div>
+            <div class="task-time">08:30</div>
+            <div class="task-name">Обсудить с Ларисой Савченко — РП и ПивМаг</div>
+          </div>
+          <div class="task-notes"></div>
+        </div>
+        <div class="task-row color-money">
+          <div class="task-left">
+            <div class="checkbox"></div>
+            <div class="task-time">09:00</div>
+            <div class="task-name">Созвон с Александром Свежевым — передача 2я Барнаульская</div>
+          </div>
+          <div class="task-notes"></div>
+        </div>
+        <div class="task-row color-money">
+          <div class="task-left">
+            <div class="checkbox"></div>
+            <div class="task-time">09:20</div>
+            <div class="task-name">Корректировки в договор → юристу Свежева</div>
+          </div>
+          <div class="task-notes"></div>
+        </div>
+        <div class="task-row color-money">
+          <div class="task-left">
+            <div class="checkbox"></div>
+            <div class="task-time">10:00</div>
+            <div class="task-name">Разобрать остатки вейп-продукции, план реализации</div>
+          </div>
+          <div class="task-notes"></div>
+        </div>
+        <div class="task-row color-money">
+          <div class="task-left">
+            <div class="checkbox"></div>
+            <div class="task-time">11:00</div>
+            <div class="task-name">Созвон с Бодней (Хукамаркет) — возврат продукции</div>
+          </div>
+          <div class="task-notes"></div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Обед</div>
+        <div class="task-row color-social">
+          <div class="task-left">
+            <div class="checkbox"></div>
+            <div class="task-time">12:30</div>
+            <div class="task-name">Обед — Денис Моисеев</div>
+          </div>
+          <div class="task-notes"></div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Задачи Б — после обеда</div>
+        <div class="task-row color-other">
+          <div class="task-left">
+            <div class="checkbox"></div>
+            <div class="task-time">14:00</div>
+            <div class="task-name">Чукреевка: выезд, приёмка коттеджей</div>
+          </div>
+          <div class="task-notes"></div>
+        </div>
+      </div>
+
+      <div class="section">
+        <div class="section-title">Вечер</div>
+        <div class="task-row color-spirit">
+          <div class="task-left">
+            <div class="checkbox"></div>
+            <div class="task-time">20:00</div>
+            <div class="task-name">Эфир X7</div>
+          </div>
+          <div class="task-notes"></div>
+        </div>
+        <div class="task-row color-social">
+          <div class="task-left">
+            <div class="checkbox"></div>
+            <div class="task-time">21:00</div>
+            <div class="task-name">Семья — после эфира дома</div>
+          </div>
+          <div class="task-notes"></div>
+        </div>
+        <div class="task-row color-spirit">
+          <div class="task-left">
+            <div class="checkbox"></div>
+            <div class="task-time">22:00</div>
+            <div class="task-name">Фрирайтинг + Рефлексия + План на завтра</div>
+          </div>
+          <div class="task-notes"></div>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-right">
+      <div class="affirm">
+        <div class="affirm-title">Аффирмации — вслух, стоя</div>
+        <div class="affirm-item">1. Я строю системы, которые работают без меня</div>
+        <div class="affirm-item">2. Я руководитель, который внедряет процессы</div>
+        <div class="affirm-item">3. Я внимательный муж и отец</div>
+        <div class="affirm-item">4. Моё тело сильное</div>
+        <div class="affirm-item">5. Я расту каждый день</div>
+        <div class="affirm-item">6. Я контролирую своё время</div>
+        <div class="affirm-item">7. Я легко отказываюсь от лишнего</div>
+      </div>
+
+      <div class="habits">
+        <div class="habits-title">Привычки дня</div>
+        <div class="habits-row">
+          <div class="habits-check"></div>
+          <div class="habits-name">Лёг до 23:00</div>
+        </div>
+        <div class="habits-row">
+          <div class="habits-check"></div>
+          <div class="habits-name">Комплимент Кате</div>
+        </div>
+        <div class="habits-row">
+          <div class="habits-check"></div>
+          <div class="habits-name">Час с Евой</div>
+        </div>
+        <div class="habits-row">
+          <div class="habits-check"></div>
+          <div class="habits-name">Без кальяна</div>
+        </div>
+        <div class="habits-row">
+          <div class="habits-check"></div>
+          <div class="habits-name">Без алкоголя</div>
+        </div>
+        <div class="habits-row">
+          <div class="habits-check"></div>
+          <div class="habits-name">Без инстаграма утром</div>
+        </div>
+      </div>
+
+      <div class="reflect">
+        <div class="reflect-title">Рефлексия (22:00 — Notion)</div>
+        <div class="reflect-item">• Чем запомнился день?</div>
+        <div class="reflect-item">• 5 достижений?</div>
+        <div class="reflect-item">• Ошибка дня?</div>
+        <div class="reflect-item">• Что по-другому?</div>
+        <div class="reflect-item">• Благодарность?</div>
+      </div>
+    </div>
+  </div>
+
+  <div class="legend">
+    <div class="legend-item"><div class="legend-dot" style="background:#4caf50"></div> Деньги</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#ffc107"></div> Социум</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#2196f3"></div> Здоровье</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#f44336"></div> Дух</div>
+    <div class="legend-item"><div class="legend-dot" style="background:#9e9e9e"></div> Прочее</div>
+  </div>
+
+  <div class="footer">Удачного дня, Дмитрий! 💪</div>
+</div>
+</body>
+</html>
