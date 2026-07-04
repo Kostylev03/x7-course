@@ -13,7 +13,7 @@ X7 Course - Денис Моисеев (Омск)
 - today.html опубликован на GitHub Pages: https://kostylev03.github.io/x7-course/today.html
 - Последний коммит: Plan for 2026-07-04 (Saturday)
 - События в Google Calendar на 04.07.2026: не найдены (план сгенерирован со стандартной структурой субботы)
-- Gmail черновик создан: → d9620462222@gmail.com
+- Gmail черновик создан: id r-164413422693687185 → d9620462222@gmail.com
 
 ## Доступы (значения — в `*.local.md`, вне git)
 - (ssh / URL / логины — только указатели на защищённую заметку)
